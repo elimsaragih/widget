@@ -7,8 +7,8 @@ import (
 	"io/ioutil"
 	"strconv"
 
-	components "github.com/elimSumanta/widget/component"
-	source "github.com/elimSumanta/widget/source"
+	components "github.com/elimsaragih/widget/component"
+	source "github.com/elimsaragih/widget/source"
 )
 
 type SourceConfig struct {
