@@ -1,0 +1,34 @@
+[
+  {
+      "widget": "banner_ace",
+      "component": "banner",
+      "source":"ace",
+      "param":"shop_id",
+      "mapping": {
+        "image_url": "image",
+        "cta_link": "link"
+      }
+  },
+  {
+      "widget": "product_list_campaign",
+      "component": "product_list",
+      "source":"campaign",
+      "param":"shop_id, campaign_id",
+      "mapping": {
+        "product_id": "product_id",
+        "image_url": "product_image",
+        "cta_link":"link",
+        "price": "product_price"
+      }
+  },
+  {
+    "widget": "banner_campaign",
+    "component": "banner",
+    "source":"campaign",
+    "param":"shop_id",
+    "mapping": {
+      "image_url": "product_image",
+      "cta_link": "link"
+    }
+}
+]
