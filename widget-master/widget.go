@@ -8,22 +8,25 @@ type WidgetMaster struct {
 	Body   Body
 }
 
-func InitWidget(setupData ComponentData, source SourceConfig) WidgetMaster {
-	return WidgetMaster{
+func InitWidget(setupData ComponentData, title, source string) *WidgetMaster {
+	return &WidgetMaster{
 		Header: Header{
-			Title: "title: " + source.Widget,
+			Title: "title: " + title,
 		},
 		Body: Body{
 			Components: []Component{
 				{
-					Identifier: source.Widget,
-					Source:     source.Source,
-					Styles:     []Style{},
-					Data:       setupData,
+					Source: source,
+					Styles: []Style{},
+					Data:   setupData,
 				},
 			},
 		},
 	}
+}
+
+func (w *WidgetMaster) SetHeader(header Header) {
+	w.Header = header
 }
 
 type Header struct {

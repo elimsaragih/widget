@@ -7,13 +7,13 @@ import (
 
 type Route struct {
 	route  *httprouter.Router
-	widget masterWidget.WidgetMaster
+	widget *masterWidget.WidgetMaster
 }
 
-func InitShopPagePkg(route *httprouter.Router, widget masterWidget.ComponentData) *Route {
+func InitShopPagePkg(route *httprouter.Router, widget masterWidget.ComponentData, title, source string) *Route {
 	// banner := components.NewBannerImgComponent(map[string]string{}, "external")
 	// widget := masterWidget.InitWidget(banner, masterWidget.AppConfig[1])
-	return &Route{route: route, widget: masterWidget.InitWidget(widget, masterWidget.AppConfig[1])}
+	return &Route{route: route, widget: masterWidget.InitWidget(widget, title, source)}
 }
 
 func (r *Route) SetData(data []byte) error {
@@ -24,4 +24,8 @@ func (r *Route) SetData(data []byte) error {
 		}
 	}
 	return nil
+}
+
+func (r *Route) SetHeaderWidget(header masterWidget.Header) {
+	r.widget.Header = header
 }

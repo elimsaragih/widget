@@ -25,17 +25,17 @@ func main() {
 		return
 	}
 
-	var widgets []masterWidget.WidgetMaster
+	var widgets []*masterWidget.WidgetMaster
 
 	// generate widget base on component
 	for _, v := range masterWidget.AppConfig {
 		switch v.Component {
 		case "banner":
 			banner := components.NewBannerImgComponent(v.Mapping, v.Source)
-			widgets = append(widgets, masterWidget.InitWidget(banner, v))
+			widgets = append(widgets, masterWidget.InitWidget(banner, v.Title, v.Source))
 		case "product_list":
 			list := components.NewProductListComponent(v.Mapping, v.Source)
-			widgets = append(widgets, masterWidget.InitWidget(list, v))
+			widgets = append(widgets, masterWidget.InitWidget(list, v.Title, v.Source))
 		}
 	}
 
