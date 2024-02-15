@@ -25,9 +25,33 @@ func wrapCall(rObj *Route, call httprouter.Handle) httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		w.Header().Set("Content-Type", "application/json")
 		call(w, r, ps)
-		jData, _ := json.Marshal(rObj.widget)
+		jData, _ := json.Marshal(rObj.generateResponse())
 		w.Write(jData)
 	}
+}
+func (r *Route) generateResponse() (resp HttpResponse) {
+	var components []Component
+	for _, v := range r.widget.Body.Components {
+		data, _ := json.Marshal(v.Data.GetData())
+		temp := Component{
+			Identifier: v.Identifier,
+			Source:     v.Source,
+			Data:       string(data),
+		}
+
+		for _, st := range v.Styles {
+			temp.Styles = append(temp.Styles, Style(st))
+		}
+		components = append(components, temp)
+	}
+
+	resp.WidgetExtMaster = WidgetExtMaster{
+		Header: Header(r.widget.Header),
+		Body: Body{
+			Components: components,
+		},
+	}
+	return resp
 }
 
 func (r *Route) SetData(data []byte) error {
