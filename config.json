@@ -20,15 +20,5 @@
         "cta_link":"link",
         "price": "product_price"
       }
-  },
-  {
-    "widget": "banner_campaign",
-    "component": "banner",
-    "source":"campaign",
-    "param":"shop_id",
-    "mapping": {
-      "image_url": "product_image",
-      "cta_link": "link"
-    }
-}
+  }
 ]

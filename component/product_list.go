@@ -1,5 +1,10 @@
 package component
 
+import (
+	"encoding/json"
+	"log"
+)
+
 type ProductListComponent struct {
 	DataMap    map[string]string
 	Source     string
@@ -17,23 +22,31 @@ func NewProductListComponent(dataMap map[string]string, source string) *ProductL
 	return &ProductListComponent{DataMap: dataMap, Source: source}
 }
 
-func (bic *ProductListComponent) SetData(data []map[string]interface{}) {
-	for _, v := range data {
+func (bic *ProductListComponent) SetData(data []byte) error {
+	var mapData []map[string]interface{}
+	err := json.Unmarshal(data, &mapData)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
+	for _, v := range mapData {
 		t := ProductListResponse{}
 		for val, key := range bic.DataMap {
 			switch val {
 			case "product_id":
-				t.ProductID = v[key].(int64)
+				t.ProductID = int64(v[key].(float64))
 			case "image_url":
 				t.ImageUrl = v[key].(string)
 			case "cta_link":
 				t.CtaLink = v[key].(string)
 			case "price":
-				t.Price = v[key].(int64)
+				t.Price = int64(v[key].(float64))
 			}
 		}
 		bic.response = append(bic.response, t)
 	}
+	return nil
 }
 
 func (bic *ProductListComponent) GetData() interface{} {

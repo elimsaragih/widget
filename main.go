@@ -5,19 +5,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"strconv"
 
 	components "github.com/elimsaragih/widget/component"
 	source "github.com/elimsaragih/widget/source"
+	masterWidget "github.com/elimsaragih/widget/widget-master"
 )
-
-type SourceConfig struct {
-	Widget    string            `json:"widget"`
-	Component string            `json:"component"`
-	Source    string            `json:"source"`
-	Param     string            `json:"param"`
-	Mapping   map[string]string `json:"mapping"`
-}
 
 func main() {
 
@@ -27,65 +19,23 @@ func main() {
 		return
 	}
 
-	var appConfig []SourceConfig
-
-	if err := json.Unmarshal(configData, &appConfig); err != nil {
+	if err := json.Unmarshal(configData, &masterWidget.AppConfig); err != nil {
 		fmt.Println(string(configData))
 		fmt.Println("Error parsing configuration:", err)
 		return
 	}
 
-	var widgets []Widget
+	var widgets []masterWidget.WidgetMaster
 
 	// generate widget base on component
-	for i, v := range appConfig {
+	for _, v := range masterWidget.AppConfig {
 		switch v.Component {
 		case "banner":
 			banner := components.NewBannerImgComponent(v.Mapping, v.Source)
-			temp := Widget{
-				Header: Header{
-					Title: "title: " + v.Widget,
-				},
-				Body: Body{
-					Components: []Component{
-						{
-							Identifier: v.Widget,
-							Source:     v.Source,
-							Styles: []Style{
-								{
-									Key:   "position",
-									Value: strconv.Itoa(i + 1),
-								},
-							},
-							Data: banner,
-						},
-					},
-				},
-			}
-			widgets = append(widgets, temp)
+			widgets = append(widgets, masterWidget.InitWidget(banner, v))
 		case "product_list":
-			banner := components.NewProductListComponent(v.Mapping, v.Source)
-			temp := Widget{
-				Header: Header{
-					Title: "title: " + v.Widget,
-				},
-				Body: Body{
-					Components: []Component{
-						{
-							Identifier: v.Widget,
-							Source:     v.Source,
-							Styles: []Style{
-								{
-									Key:   "position",
-									Value: strconv.Itoa(i + 1),
-								},
-							},
-							Data: banner,
-						},
-					},
-				},
-			}
-			widgets = append(widgets, temp)
+			list := components.NewProductListComponent(v.Mapping, v.Source)
+			widgets = append(widgets, masterWidget.InitWidget(list, v))
 		}
 	}
 
@@ -96,11 +46,13 @@ func main() {
 			case "ace":
 				temp := source.NewAceSource()
 				tes := AdaptorAce(temp.GetProductList(context.Background(), 123))
-				comp.Data.SetData(tes)
+				data, _ := json.Marshal(tes)
+				comp.Data.SetData(data)
 			case "campaign":
 				temp := source.NewCampaignSource()
 				tes := AdaptorCampaign(temp.GetProductList(context.Background(), 123, 123))
-				comp.Data.SetData(tes)
+				data, _ := json.Marshal(tes)
+				comp.Data.SetData(data)
 			}
 		}
 	}

@@ -1,5 +1,10 @@
 package component
 
+import (
+	"encoding/json"
+	"log"
+)
+
 type BannerImgComponent struct {
 	DataMap    map[string]string
 	Source     string
@@ -17,21 +22,30 @@ func NewBannerImgComponent(dataMap map[string]string, source string) *BannerImgC
 	return &BannerImgComponent{DataMap: dataMap, Source: source}
 }
 
-func (bic *BannerImgComponent) SetData(data []map[string]interface{}) {
-	for _, v := range data {
+func (bic *BannerImgComponent) SetData(data []byte) error {
+	var mapData []map[string]interface{}
+
+	err := json.Unmarshal(data, &mapData)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
+	for _, v := range mapData {
 		t := BannerImgResponse{}
 		for val, key := range bic.DataMap {
-			switch key {
+			switch val {
 			case "image_url":
-				t.ImageUrl = v[val].(string)
+				t.ImageUrl = v[key].(string)
 			case "ratio":
 				t.Ratio = "2:1"
 			case "cta_link":
-				t.CtaLink = v[val].(string)
+				t.CtaLink = v[key].(string)
 			}
 		}
 		bic.response = append(bic.response, t)
 	}
+	return nil
 }
 
 func (bic *BannerImgComponent) GetData() interface{} {
