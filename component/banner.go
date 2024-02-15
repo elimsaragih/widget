@@ -6,10 +6,11 @@ import (
 )
 
 type BannerImgComponent struct {
-	DataMap    map[string]string
-	Source     string
-	Parameters map[string]string
-	response   []BannerImgResponse
+	DataMap     map[string]string
+	Source      string
+	Parameters  map[string]string
+	dataMapType int
+	response    []BannerImgResponse
 }
 type BannerImgResponse struct {
 	ImageUrl string `json:"image_url"`
@@ -18,11 +19,15 @@ type BannerImgResponse struct {
 	ImageID  int64  `json:"image_id"`
 }
 
-func NewBannerImgComponent(dataMap map[string]string, source string) *BannerImgComponent {
-	return &BannerImgComponent{DataMap: dataMap, Source: source}
+func NewBannerImgComponent(dataMapType int, dataMap map[string]string, source string) *BannerImgComponent {
+	return &BannerImgComponent{dataMapType: dataMapType, DataMap: dataMap, Source: source}
 }
 
 func (bic *BannerImgComponent) SetData(data []byte) error {
+	if bic.dataMapType == DataMapDefault {
+		return json.Unmarshal(data, &bic.response)
+	}
+
 	var mapData []map[string]interface{}
 
 	err := json.Unmarshal(data, &mapData)

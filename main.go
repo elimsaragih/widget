@@ -31,13 +31,15 @@ func main() {
 	for _, v := range masterWidget.AppConfig {
 		switch v.Component {
 		case "banner":
-			banner := components.NewBannerImgComponent(v.Mapping, v.Source)
+			banner := components.NewBannerImgComponent(components.DataMapConfigurable, v.Mapping, v.Source)
 			widgets = append(widgets, masterWidget.InitWidget(banner, v.Title, v.Source))
 		case "product_list":
-			list := components.NewProductListComponent(v.Mapping, v.Source)
+			list := components.NewProductListComponent(components.DataMapConfigurable, v.Mapping, v.Source)
 			widgets = append(widgets, masterWidget.InitWidget(list, v.Title, v.Source))
 		}
 	}
+
+	// any vaidation widgets here
 
 	// contract widget data by source
 	for _, v := range widgets {

@@ -6,10 +6,11 @@ import (
 )
 
 type ProductListComponent struct {
-	DataMap    map[string]string
-	Source     string
-	Parameters map[string]string
-	response   []ProductListResponse
+	DataMap     map[string]string
+	Source      string
+	Parameters  map[string]string
+	dataMapType int
+	response    []ProductListResponse
 }
 type ProductListResponse struct {
 	ProductID int64  `json:"product_id"`
@@ -18,11 +19,15 @@ type ProductListResponse struct {
 	Price     int64  `json:"price"`
 }
 
-func NewProductListComponent(dataMap map[string]string, source string) *ProductListComponent {
-	return &ProductListComponent{DataMap: dataMap, Source: source}
+func NewProductListComponent(dataMapType int, dataMap map[string]string, source string) *ProductListComponent {
+	return &ProductListComponent{dataMapType: dataMapType, DataMap: dataMap, Source: source}
 }
 
 func (bic *ProductListComponent) SetData(data []byte) error {
+	if bic.dataMapType == DataMapDefault {
+		return json.Unmarshal(data, &bic.response)
+	}
+
 	var mapData []map[string]interface{}
 	err := json.Unmarshal(data, &mapData)
 	if err != nil {
