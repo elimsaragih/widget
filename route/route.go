@@ -10,10 +10,11 @@ type Route struct {
 	widget *masterWidget.WidgetMaster
 }
 
-func InitShopPagePkg(route *httprouter.Router, widget masterWidget.ComponentData, title, source string) *Route {
+func InitShopPagePkg(route *httprouter.Router, widget masterWidget.ComponentData, title, path string, call httprouter.Handle) *Route {
 	// banner := components.NewBannerImgComponent(map[string]string{}, "external")
 	// widget := masterWidget.InitWidget(banner, masterWidget.AppConfig[1])
-	return &Route{route: route, widget: masterWidget.InitWidget(widget, title, source)}
+	route.GET("/external/"+path, call)
+	return &Route{route: route, widget: masterWidget.InitWidget(widget, title, path)}
 }
 
 func (r *Route) SetData(data []byte) error {
