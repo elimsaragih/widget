@@ -1,6 +1,8 @@
 package route
 
 import (
+	"encoding/json"
+
 	masterWidget "github.com/elimsaragih/widget/widget-master"
 	"github.com/julienschmidt/httprouter"
 )
@@ -25,6 +27,10 @@ func (r *Route) SetData(data []byte) error {
 		}
 	}
 	return nil
+}
+
+func (r *Route) GetData() ([]byte, error) {
+	return json.Marshal(r.widget)
 }
 
 func (r *Route) SetHeaderWidget(header masterWidget.Header) {
